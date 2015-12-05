@@ -243,3 +243,124 @@ print(numbers)
 他可以直接跟在括号里面，当一个闭包是传给函数的唯一参数，你可以完全忽略括号*/
 let sortedNumbers = numbers.sort{$0 > $1}
 print(sortedNumbers)
+
+//函数和对象
+class Shape{
+    let line = 5
+    var numberOfSides = 0
+    func simpleDescription() ->String{
+        return "A shape with \(numberOfSides) sides."
+    }
+    
+    func showIt(name:String) ->String{
+        return "Hello master! I'm " + name + ". Thank you for bring me to this world!"
+    }
+}
+
+var shape = Shape() //使用类名创建实体对象，注意用法，基本上跟JavaScript里调用无参函数一致。
+shape.numberOfSides = 7
+var shapeDescription = shape.simpleDescription()
+var shapeName = shape.showIt("Andren")
+
+//上一个版本的Shape类缺少了一些重要的东西：一个构造函数来初始化实例。使用init来创建一个构造器: 注意self被用来区别实例变量。当你创建实例的时候，想传入函数参数一样给雷传入构造器的参数。
+//每一个属性都需要赋值 - 无论是通过生命（就像numberOfSides）还是通过构造器（就像name）
+class NamedShape{
+    var numberOfSides: Int = 0
+    var name: String
+    
+    init(name: String){
+        self.name = name
+    }
+    
+    func simpleDescription() ->String{
+        return "A shape with \(numberOfSides) sides"
+    }
+}
+
+
+//如果你需要再删除对象之前进行一些清理工作，使用deint创建一个析构函数。
+//子类的定义方法是在他们的类名后面加上父类的名字，用冒号分割。创建类的时候不需要一个标准的根类，所以你可以忽略父类
+//子类如果需要重写父类的方法的话，需要用override标记 - 如果没有添加override就重写父类的方法的话，编译器会报错。编译器会同样检测override标记的方法是否确实在父类中
+class Square: NamedShape{
+    var sideLength: Double
+    
+    init(sideLength: Double, name:String) {
+        self.sideLength = sideLength
+        super.init(name: name)
+        numberOfSides = 4
+    }
+    
+    func area() ->Double{
+        return sideLength * sideLength
+    }
+    
+    override func simpleDescription() -> String {
+        return "A square with sides of length \(sideLength)."
+    }
+}
+
+let test = Square(sideLength: 5.2, name: "my test square")
+test.area()
+test.simpleDescription()
+
+//Practice: 创建NamedShape的另一个子类Circle，构造器接受两个参数，一个是半径一个是名称，在子类Circle中实现area()和simpleDescription()方法
+class Circle: NamedShape{
+    var radius: Double
+    
+    init(radius: Double, name:String){
+        self.radius = radius
+        super.init(name: name)
+    }
+    
+    func area() ->Double{
+        return 2 * 3.1415926 * radius
+    }
+    
+    override func simpleDescription() -> String {
+        return "A circle with radius of \(radius)."
+    }
+}
+
+let sCircle = Circle(radius: 5.66, name: "suntao")
+sCircle.area()
+sCircle.simpleDescription()
+
+//除了存储简单的属性之外，属性可以有getter和setter
+class EquilateralTriangle: NamedShape{
+    var sideLength: Double = 0.0
+    
+    init(sideLength: Double, name:String){
+        self.sideLength = sideLength
+        super.init(name: name)
+        numberOfSides = 3
+    }
+    
+    var perimeter: Double{
+        get{
+            return 3.0 * sideLength
+        }
+        
+        set{
+            sideLength = newValue / 3.0
+        }
+    }
+    
+    override func simpleDescription() -> String {
+        return "An equilateral triagle with side of length \(sideLength)."
+    }
+}
+
+let triangle = EquilateralTriangle(sideLength: 3.1, name: "a triangle")
+print(triangle.perimeter)
+triangle.perimeter = 9.9
+print(triangle.sideLength)
+
+
+
+
+
+
+
+
+
+
